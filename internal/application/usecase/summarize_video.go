@@ -39,7 +39,7 @@ func (uc *SummarizeVideo) Execute(ctx context.Context, videoURL string) (string,
 		return "", fmt.Errorf("fetch transcript: %w", err)
 	}
 
-	prompt := fmt.Sprintf("Summarize the following video in Russian.\n\n%s", transcript)
+	prompt := fmt.Sprintf("Summarize the following video in Russian. Use Telegram Markdown (asterisks for bold, underscores for italics, backticks for inline code) and structure the summary into logical paragraphs or lists as needed.\n\n%s", transcript)
 	uc.log.Info(ctx, "sending transcript to summarizer", "length", len(transcript))
 
 	summary, err := uc.summarizer.Summarize(ctx, prompt)

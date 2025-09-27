@@ -9,10 +9,10 @@ import (
 
 	"videogeneralizertelegrambot/internal/application/usecase"
 	"videogeneralizertelegrambot/internal/config"
-	googleinfra "videogeneralizertelegrambot/internal/infrastructure/google"
 	"videogeneralizertelegrambot/internal/infrastructure/logger"
 	openaiinfra "videogeneralizertelegrambot/internal/infrastructure/openai"
 	teleinfra "videogeneralizertelegrambot/internal/infrastructure/telegram"
+	ytdlpinfra "videogeneralizertelegrambot/internal/infrastructure/ytdlp"
 )
 
 func main() {
@@ -26,10 +26,7 @@ func main() {
 
 	logProvider := logger.New(cfg.Environment)
 
-	ytClient, err := googleinfra.NewYouTubeTranscriptClient(ctx, cfg.GoogleAPIKey)
-	if err != nil {
-		log.Fatalf("init youtube client: %v", err)
-	}
+	ytClient := ytdlpinfra.NewTranscriptClient(cfg.YtDLPPath)
 
 	summarizer := openaiinfra.NewSummarizer(cfg.OpenAIAPIKey, cfg.OpenAIModel)
 

@@ -27,7 +27,7 @@ func (s *Summarizer) Summarize(ctx context.Context, body string) (string, error)
 		Model:       s.model,
 		Temperature: 0.3,
 		Messages: []goopenai.ChatCompletionMessage{
-			{Role: goopenai.ChatMessageRoleSystem, Content: "You are a concise assistant. Always deliver summaries in Russian and highlight the essential points."},
+			{Role: goopenai.ChatMessageRoleSystem, Content: "You are a concise assistant responding in Russian. Format the answer using Telegram Markdown (bold with *, italic with _, code with `) and feel free to use numbered or bulleted lists."},
 			{Role: goopenai.ChatMessageRoleUser, Content: body},
 		},
 	})
