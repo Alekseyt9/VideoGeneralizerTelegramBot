@@ -1,11 +1,12 @@
 package main
 
 import (
-	"context"
-	"log"
-	"os"
-	"os/signal"
-	"syscall"
+    "context"
+    "log"
+    "os"
+    "os/signal"
+    "syscall"
+    "time"
 
 	"videogeneralizertelegrambot/internal/application/usecase"
 	"videogeneralizertelegrambot/internal/config"
@@ -32,7 +33,7 @@ func main() {
 
 	summarizeVideo := usecase.NewSummarizeVideo(logProvider, ytClient, summarizer)
 
-	bot, err := teleinfra.NewBot(cfg.TelegramToken, summarizeVideo, logProvider)
+	bot, err := teleinfra.NewBot(cfg.TelegramToken, summarizeVideo, logProvider, time.Duration(cfg.TaskInterval)*time.Second)
 	if err != nil {
 		log.Fatalf("init telegram bot: %v", err)
 	}
