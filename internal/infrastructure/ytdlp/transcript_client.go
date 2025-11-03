@@ -62,6 +62,33 @@ func (c *TranscriptClient) FetchTranscript(ctx context.Context, videoID string) 
 	return transcript, nil
 }
 
+// FetchTitle retrieves the video title using yt-dlp.
+func (c *TranscriptClient) FetchTitle(ctx context.Context, videoID string) (string, error) {
+	videoURL := fmt.Sprintf("https://www.youtube.com/watch?v=%s", videoID)
+	args := []string{
+		"--ignore-config",
+		"--get-title",
+		videoURL,
+	}
+
+	cmd := exec.CommandContext(ctx, c.executable, args...)
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		trimmed := strings.TrimSpace(string(output))
+		if trimmed != "" {
+			return "", fmt.Errorf("fetch title (%s): %w", trimmed, err)
+		}
+		return "", fmt.Errorf("fetch title: %w", err)
+	}
+
+	title := strings.TrimSpace(string(output))
+	if title == "" {
+		return "", fmt.Errorf("fetch title: empty response")
+	}
+
+	return title, nil
+}
+
 func (c *TranscriptClient) fetchWithTracks(ctx context.Context, videoID string, tracks []subtitleTrack) (string, error) {
 	const maxAttempts = 3
 	backoff := 5 * time.Second

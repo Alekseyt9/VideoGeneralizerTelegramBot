@@ -5,6 +5,7 @@ import "context"
 // TranscriptProvider fetches transcript of a video by its ID.
 type TranscriptProvider interface {
 	FetchTranscript(ctx context.Context, videoID string) (string, error)
+	FetchTitle(ctx context.Context, videoID string) (string, error)
 }
 
 // Summarizer generates a text summary based on provided prompt body.
