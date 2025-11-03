@@ -81,7 +81,22 @@ func (c *TranscriptClient) FetchTitle(ctx context.Context, videoID string) (stri
 		return "", fmt.Errorf("fetch title: %w", err)
 	}
 
-	title := strings.TrimSpace(string(output))
+	raw := strings.Split(string(output), "\n")
+	var title string
+	for _, line := range raw {
+		trimmed := strings.TrimSpace(line)
+		if trimmed == "" {
+			continue
+		}
+		if strings.HasPrefix(strings.ToUpper(trimmed), "WARNING:") {
+			continue
+		}
+		if strings.HasPrefix(trimmed, "[") {
+			continue
+		}
+		title = trimmed
+	}
+
 	if title == "" {
 		return "", fmt.Errorf("fetch title: empty response")
 	}
